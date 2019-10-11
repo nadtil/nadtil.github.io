@@ -1,5 +1,13 @@
 <!DOCTYPE html>
 <html lang="{{ site.lang | default: "en-US" }}">
+      <!-- Side navigation -->
+  <div class="sidenav">
+    <a href="#">About</a>
+    <a href="#">Services</a>
+    <a href="#">Clients</a>
+    <a href="#">Contact</a>
+  </div>
+  
   <head>
 
     {% if site.google_analytics %}
@@ -19,14 +27,6 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
   </head>
-  
-    <!-- Side navigation -->
-  <div class="sidenav">
-    <a href="#">About</a>
-    <a href="#">Services</a>
-    <a href="#">Clients</a>
-    <a href="#">Contact</a>
-  </div>
   
   <body>
     <a id="skip-to-content" href="#content">Skip to the content.</a>
