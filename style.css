@@ -1,0 +1,132 @@
+
+html,body{
+	font-family:Verdana,sans-serif;
+	font-size:15px;line-height:1.5
+}
+
+body{
+	margin: 0px;
+	padding: 0px;
+}
+
+html {
+	overflow-x:hidden
+	margin: 0px;
+}
+
+h1{font-size:36px}
+h2{font-size:30px}
+h3{font-size:24px}
+h4{font-size:20px}
+h5{font-size:18px}
+h6{font-size:16px}
+
+.w3-serif{
+	font-family:serif
+}
+
+h1,h2,h3,h4,h5,h6{
+	font-family:"Segoe UI",Arial,sans-serif;
+	font-weight:400;
+	margin:10px 0
+}
+
+.w3-wide{
+	letter-spacing:4px
+}
+
+hr{
+	border:0;
+	border-top:1px solid #eee;
+	margin:20px 0
+}
+
+
+.abc {
+	color: blue;
+	transition: color 0.2s ease-in-out;
+}
+.abc:hover {
+	color: red;
+}
+
+div {
+	padding-left: 0px;
+}
+
+.card {
+	/*width: 250px;*/
+  	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  	/*text-align: center;*/
+}
+.w3-sidebar {
+	height:100%;
+	width:25%;
+	background-color:#fff;
+	position:fixed!important;
+	z-index:1;
+	overflow:auto
+}
+
+.w3-light-grey,.w3-hover-light-grey:hover,.w3-light-gray,.w3-hover-light-gray:hover {
+	color:#000!important;
+	background-color:#f1f1f1!important
+}
+
+.w3-bar-block .w3-dropdown-hover,.w3-bar-block .w3-dropdown-click {
+	width:100%;
+}
+
+.w3-bar-block .w3-dropdown-hover .w3-dropdown-content,.w3-bar-block .w3-dropdown-click .w3-dropdown-content{
+	min-width:100%;
+}
+.w3-bar-block .w3-dropdown-hover .w3-button,.w3-bar-block .w3-dropdown-click .w3-button {
+	width:100%;
+	text-align:left;
+	/*padding:8px 16px;*/
+}
+
+.w3-bar-block .w3-bar-item {
+	width:100%;
+	display:block;
+	padding:8px 16px;
+	text-align:left;
+	border:none;
+	white-space:normal;
+	float:none;
+	outline:0;
+}
+
+.w3-bar-block.w3-center .w3-bar-item {
+	text-align:center
+}
+
+.w3-block{
+	display:block;
+	width:100%;
+}
+
+.w3-button:hover {
+	color:#000!important;
+	background-color:#C0C0C0!important;
+	transition: background-color 0.2s ease-in-out;
+}
+
+.main-body {
+	margin-left: 25%;
+}
+
+.main-body-header {
+	background-color: #009688;
+	color: #000;
+	height: 40px;
+	padding: 10px;
+}
+/*p {
+	color: blue;
+	transition: color 0.2s ease-in-out;
+}
+p:hover {
+	color: red;
+}*/
+
