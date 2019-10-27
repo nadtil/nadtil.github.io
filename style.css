@@ -85,6 +85,8 @@ button:-moz-focusring,[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[
 .w3-sidebar {
 	height:100%;
 	width:25%;
+	max-width: 300px;
+	min-width: 100px;
 	background-color:#fff;
 	position:fixed!important;
 	z-index:1;
@@ -117,7 +119,6 @@ button:-moz-focusring,[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[
 	text-align:left;
 	border:none;
 	white-space:normal;
-	float:none;
 	outline:none;
 	box-sizing: border-box;
 }
@@ -129,7 +130,6 @@ button:-moz-focusring,[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[
 	text-align:left;
 	border:none;
 	white-space:normal;
-	float:none;
 	outline:0;
 	box-sizing: border-box;
 }
@@ -156,9 +156,12 @@ button:-moz-focusring,[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[
 }
 
 .main-body {
-	margin-left: 25%;
+	/*margin-left: 25%;*/
+	position: absolute;
 	padding-left: 0px;
 	background-clip: border-box;
+	display: inline;
+	float: right;
 }
 
 .main-body-header {
@@ -194,7 +197,8 @@ button:-moz-focusring,[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[
 	display:none;
 	position:fixed;
 	left: 25%;
-	min-width:160px;
+	min-width:100px;
+	max-width: 300px;
 	width: 25%;
 	margin:0;
 	padding:0;
