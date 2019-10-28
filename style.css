@@ -13,7 +13,7 @@ body{
 }
 
 html {
-	overflow-x: hidden;
+	/*overflow-x: hidden;*/
 	margin: 0px;
 	padding: 0px 0px 0px 0px;
 }
@@ -83,13 +83,13 @@ button,input,select,textarea,optgroup {
 }
 .w3-sidebar {
 	height:100%;
-	width:25%;
+	width:250px;
 	max-width: 300px;
 	min-width: 180px;
 	background-color:#fff;
-	position:relative;
+	position:fixed;
 	z-index:1;
-	overflow:auto;
+	overflow:none;
 	display: inline-block;
 }
 
@@ -143,12 +143,14 @@ button,input,select,textarea,optgroup {
 }
 
 .main-body {
-	/*margin-left: 25%;*/
+	margin-left: 250px;
 	position: absolute;
 	padding-left: 0px;
 	background-clip: border-box;
 	display: inline-block;
 	float: right;
+	white-space: normal;
+	/*transform: translateX(50%);*/
 }
 
 .main-body-header {
@@ -157,6 +159,8 @@ button,input,select,textarea,optgroup {
 	color: #000;
 	height: 40px;
 	padding: 10px;
+	white-space: nowrap;
+
 }
 
 .main-body-paragraph {
@@ -189,6 +193,12 @@ button,input,select,textarea,optgroup {
 	margin:0;
 	padding:0;
 	z-index:99;
+}
+
+.img-style {
+	max-width: 100%;
+	height: auto;
+	/*width: 1000px;*/
 }
 
 
