@@ -119,6 +119,18 @@ button,input,select,textarea,optgroup {
 	box-sizing: border-box;
 }
 
+.sb-bar-item-section {
+	width:100%;
+	display:block;
+	padding:8px 16px;
+	text-align:left;
+	border:none;
+	white-space:normal;
+	outline:none;
+	box-sizing: border-box;
+	background-color: #B2DAEB;
+}
+
 .w3-bar-item-in-line {
 	width:100%;
 	display: inline-block;
@@ -157,10 +169,27 @@ button,input,select,textarea,optgroup {
 	background-color: #009688;
 	background-clip: border-box;
 	color: #000;
-	height: 40px;
+	height: 70px;
 	padding: 10px;
 	white-space: nowrap;
+	box-sizing: border-box;
+}
 
+.link-to-main-page {
+	background-clip: border-box;
+	/*background-color: #52A0C1;*/
+	width:100%;
+	display:block;
+	padding:8px 16px;
+	border:none;
+	white-space:normal;
+	outline:none;
+	box-sizing: border-box;
+	height: 70px;
+	font-size: 20px;
+	text-align: center;
+	justify-content: center;
+	line-height: 50px;
 }
 
 .main-body-paragraph {
