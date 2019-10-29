@@ -3,81 +3,13 @@
 <head>
 	<title>Don Tilakumara</title>
 	<link rel="stylesheet" type="text/css" href="style.css"/>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
 </head>
 <body>
-    
-	<div id="id-side-bar" class="w3-sidebar w3-light-grey w3-bar-block card">
-        <a href="/" class="link-to-main-page">Don Tilakumara</a>
-        <h3 class="sb-bar-item-section">Projects</h3>
 
-        <div class="sc-dropdown-hover">
-            <button class="w3-bar-item-in-line w3-button sc-highlight-origin">
-                Digital Oscilloscope
-                <span style="float: right; padding-right: 10px">&#x25BA</span>
-            </button>
-            <div class="sc-dropdown-content card">
-                <a href="dso_schematics.html" class="w3-bar-item-in-line w3-button">Schematics</a>
-                <a href="dso_pcb.html" class="w3-bar-item-in-line w3-button">PCB</a>
-                <a href="#" class="w3-bar-item-in-line w3-button">Code Snippet</a>
-            </div>
-        </div>
-
-        <div class="sc-dropdown-hover">
-            <button class="w3-bar-item-in-line w3-button sc-highlight-origin">
-                Bluetooth Prototype 1
-                <span style="float: right; padding-right: 10px">&#x25BA</span>
-            </button>
-            <div class="sc-dropdown-content card">
-                <a href="#" class="w3-bar-item-in-line w3-button">PCB</a>
-            </div>
-        </div>
-
-        <div class="sc-dropdown-hover">
-            <button class="w3-bar-item-in-line w3-button sc-highlight-origin">
-                Bluetooth Prototype 2
-                <span style="float: right; padding-right: 10px">&#x25BA</span>
-            </button>
-            <div class="sc-dropdown-content card">
-                <a href="#" class="w3-bar-item-in-line w3-button">PCB</a>
-            </div>
-        </div>
-
-        <div class="sc-dropdown-hover">
-            <button class="w3-bar-item-in-line w3-button sc-highlight-origin">
-                Zigbee Prototype
-                <span style="float: right; padding-right: 10px">&#x25BA</span>
-            </button>
-            <div class="sc-dropdown-content card">
-                <a href="#" class="w3-bar-item-in-line w3-button">PCB</a>
-            </div>
-        </div>
-
-        <div class="sc-dropdown-hover">
-            <button class="w3-bar-item-in-line w3-button sc-highlight-origin">
-                AC DC converter
-                <span style="float: right; padding-right: 10px">&#x25BA</span>
-            </button>
-            <div class="sc-dropdown-content card">
-                <a href="acdc_schematics.html" class="w3-bar-item-in-line w3-button">Schematics</a>
-                <a href="#" class="w3-bar-item-in-line w3-button">PCB</a>
-            </div>
-        </div>
-
-        <div class="sc-dropdown-hover">
-            <button class="w3-bar-item-in-line w3-button sc-highlight-origin">
-                Motor Controller
-                <span style="float: right; padding-right: 10px">&#x25BA</span>
-            </button>
-            <div class="sc-dropdown-content card">
-                <a href="dso_schematics.html" class="w3-bar-item-in-line w3-button">Schematics</a>
-                <a href="#" class="w3-bar-item-in-line w3-button">PCB</a>
-            </div>
-        </div>
-
-        <h3 class="sb-bar-item-section">Resume</h3>
-
+	<div id="commonsection">
+        
     </div>
-
         
 	<div>
         <h2 class="main-body-header card">Digital Oscilloscope Schematics</h2>
@@ -100,11 +32,9 @@
 
 	</div>
 	
-	<script type="text/javascript">
-		var myElement = document.getElementById.('id-side-bar');
-		var offSetWidthSideBar = myElement.offsetWidth;
-		
-	</script>
+    <script>
+        $( "#commonsection" ).load( "template.html" );
+    </script>
 	<!-- <script>
 		var myElement = document.getElementById('xyz');
 		myElement.addEventListener('mouseenter', function () {
