@@ -17,7 +17,13 @@
 
 	<div class="main-body">
 		
-		<p class="main-body-paragraph"></p>
+		<p class="main-body-paragraph">
+            This is a digital oscilloscope designed to sample at 40MSPS allowing it to measure a signal at upto 20MHz. This PCB connects to the computer 
+            through a USB interface and displays the graphed signal on a desktop application. There is a lowpass filter designed for the front-end of this
+            circuit to cutoff any frequencies above 20MHz. Lowpass filter was designed using the sallen-key architecture and it was simulted in LT-Spice
+            before implementing it on the PCB.
+        </p>
+
 		<p class="main-body-paragraph">Schematics of the Digital Oscilloscope</p>
 
 		<img src="resources\imgs\digitalOsc\DSO2.png" alt="Top Level" class="img-style">
@@ -33,7 +39,7 @@
 	</div>
 	
     <script>
-        $( "#commonsection" ).load( "template.html" );
+        $( "#commonsection" ).load( "layouts/template.html" );
     </script>
 	<!-- <script>
 		var myElement = document.getElementById('xyz');
