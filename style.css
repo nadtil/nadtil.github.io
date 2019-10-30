@@ -238,6 +238,7 @@ button,input,select,textarea,optgroup {
 	height: auto;
 	width: 100%;
 	max-width: 1200px;
+	/*filter: drop-shadow(8px 8px 10px gray);*/
 	/*width: 1000px;*/
 }
 
@@ -245,6 +246,18 @@ button,input,select,textarea,optgroup {
 	height: auto;
 	width: 100%;
 	max-width: 500px;
+	filter: brightness(140%);
+	/*width: 1000px;*/
+}
+
+.img-style-medium {
+	height: auto;
+	width: 100%;
+	max-width: 700px;
+	/*opacity: 0.8;*/
+	filter: brightness(140%);
+	/*filter: contrast(80%);*/
+	/*filter: drop-shadow(8px 8px 10px gray);*/
 	/*width: 1000px;*/
 }
 
