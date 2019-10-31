@@ -30,9 +30,13 @@
     <script>
         $( "#commonsection" ).load( "layouts/template.html" );
         $( "#game-console-code" ).load( "layouts/game_console_code.html" );
+        
+        $(document).ready(function() {
+            $.getScript("scripts/run_prettify.js");
+        });
     </script>
 
-    <script src="scripts/run_prettify.js"async></script>
+    <!-- <script src="scripts/run_prettify.js" async></script> -->
 
 </body>
 <!-- This script is running at the end of html because it needs other javascripts to be complete before running -->
