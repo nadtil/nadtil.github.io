@@ -1,0 +1,621 @@
+
+<pre class="prettyprint">
+/*
+*Author: Don Nadeesha Tilakumara
+*Copyright 2019 ClassifAI PTY LTD
+*/
+
+#include &lt;stdio.h&gt;
+#include "boards.h"
+#include "app_util_platform.h"
+#include "app_error.h"
+#include "nrf_drv_twi.h"
+#include "nrf_delay.h"
+#include "app_timer.h"
+
+#include "nrf_log.h"
+#include "nrf_log_ctrl.h"
+#include "nrf_log_default_backends.h"
+
+#include "LSM9DS1_main.h"
+
+/* TWI instance ID. */
+#define TWI_INSTANCE_ID     0
+
+/* Common addresses definition for Inertial sensor. */
+#define LSM9DS1_address     (0x6BU)
+
+#define LM75B_REG_TEMP      0x00U
+#define LM75B_REG_CONF      0x01U
+#define LM75B_REG_THYST     0x02U
+#define LM75B_REG_TOS       0x03U
+
+/* Indicates if operation on TWI has ended. */
+volatile static bool m_xfer_done = false;
+
+/* TWI instance. */
+static const nrf_drv_twi_t m_twi = NRF_DRV_TWI_INSTANCE(TWI_INSTANCE_ID);
+
+/* Values used to convert uints to corresponding real values*/
+uint16_t    m_g_res = 0x0000;
+uint8_t     m_a_res = 0x00;
+
+/* variable to hold the temporary values */
+uint8_t m_sample;
+
+static uint16_t gValuePrevArray[3] = {0,0,0};
+
+
+/**
+ * @brief Function for writing a byte to the control register.
+ *
+ * @param [in] deviceAddr   address of the device (I2C) address
+ * @param [in] ctrlAddr     address of the register to be controlled
+ * @param [in] val          value to be written to the control register
+ */
+void writeToControlAddr(uint8_t deviceAddr, uint8_t ctrlAddr, uint8_t val)
+{
+    ret_code_t err_code;
+    
+    uint8_t reg[2] = {ctrlAddr, val};
+    
+    m_xfer_done = false;
+    err_code = nrf_drv_twi_tx(&amp;m_twi, LSM9DS1_address, reg, 2, false);
+    APP_ERROR_CHECK(err_code);
+    while(m_xfer_done == false);
+    
+//    NRF_LOG_INFO("CTRL Written");
+    
+}
+
+/**
+ * @brief Function for reading gyro value from the sensor into the value holder.
+ *
+ * @param [out] *val            pointer to hold the value read
+ * @param [in] length           number of bytes to be read
+ * @param [out] *gValHolder     gyroscope value holder 
+ */
+extern void readGyroVal(uint8_t *val, uint8_t length, gyroValHolder *gValHolder)
+{
+    ret_code_t err_code;
+    
+    m_xfer_done = false;
+    uint8_t subaddress = OUT_X_L_G;
+    err_code = nrf_drv_twi_tx(&amp;m_twi, LSM9DS1_address, &amp;subaddress, 1, false);
+    APP_ERROR_CHECK(err_code);
+    
+    while(m_xfer_done == false);
+    
+    m_xfer_done = false;
+    err_code = nrf_drv_twi_rx(&amp;m_twi, LSM9DS1_address, val, length);
+    APP_ERROR_CHECK(err_code);
+    while(m_xfer_done == false);
+    
+    gValHolder-&gt;gx = (val[1] &lt;&lt; 8) | val[0];
+    gValHolder-&gt;gy = (val[3] &lt;&lt; 8) | val[2];
+    gValHolder-&gt;gz = (val[5] &lt;&lt; 8) | val[4];
+    
+}
+
+/**
+ * @brief Function for reading accel value from the sensor into the value holder.
+ *
+ * @param [out]     *val            pointer to hold the value read
+ * @param [in]      length          number of bytes to be read
+ * @param [out]     *aValHolder     accelerometer value holder 
+ */
+extern void readAccelVal(uint8_t *val, uint8_t length, accelValHolder *aValHolder)
+{
+    ret_code_t err_code;
+    
+    m_xfer_done = false;
+    uint8_t subaddress = OUT_X_L_XL;
+    err_code = nrf_drv_twi_tx(&amp;m_twi, LSM9DS1_address, &amp;subaddress, 1, false);
+    APP_ERROR_CHECK(err_code);
+    while(m_xfer_done == false);
+    
+    m_xfer_done = false;
+    err_code = nrf_drv_twi_rx(&amp;m_twi, LSM9DS1_address, val, 6);
+    APP_ERROR_CHECK(err_code);
+    while(m_xfer_done == false);
+    
+    aValHolder-&gt;ax = (val[1] &lt;&lt; 8) | val[0];
+    aValHolder-&gt;ay = (val[3] &lt;&lt; 8) | val[2];
+    aValHolder-&gt;az = (val[5] &lt;&lt; 8) | val[4];
+}
+
+/**
+ * @brief Function for reading gyro value from the sensor and convert it into positive values.
+ *
+ * @param [out]     *val            pointer to hold the value read
+ * @param [in]      length          number of bytes to be read
+ * @param [out]     *gValHolder     gyroscope value holder 
+ * @param [out]     *gValContainer  container to hold the gyroscope value 
+ */
+extern void readGyroValAndDifference(uint8_t *val, uint8_t length, gyroValHolder *gValHolder, uint16_t *gValContainer)
+{
+    readGyroVal(val, length, gValHolder);
+    
+    if(gValHolder-&gt;gx &lt;= (0xFFFF &gt;&gt; 1))
+    {
+        gValContainer[0] = gValHolder-&gt;gx;
+    }else
+    {
+        gValContainer[0] = ~gValHolder-&gt;gx;
+    }
+    
+    if(gValHolder-&gt;gy &lt;= (0xFFFF &gt;&gt; 1))
+    {
+        gValContainer[1] = gValHolder-&gt;gy;
+    }else
+    {
+        gValContainer[1] = ~gValHolder-&gt;gy;
+    }
+    
+    if(gValHolder-&gt;gz &lt;= (0xFFFF &gt;&gt; 1))
+    {
+        gValContainer[2] = gValHolder-&gt;gz;
+    }else
+    {
+        gValContainer[2] = ~gValHolder-&gt;gz;
+    }
+    
+//    gValContainer[0] = gValHolder-&gt;gx - gValuePrevArray[0];
+//    gValContainer[1] = gValHolder-&gt;gy - gValuePrevArray[1];
+//    gValContainer[2] = gValHolder-&gt;gz - gValuePrevArray[2];
+    
+    gValuePrevArray[0] = gValHolder-&gt;gx;
+    gValuePrevArray[1] = gValHolder-&gt;gy;
+    gValuePrevArray[2] = gValHolder-&gt;gz;
+}
+
+/**
+ * @brief Function for testing the sensor and I2C communication
+ */
+extern void testRead(void)
+{
+    uint32_t err_code;
+    uint8_t who_am_i_address = WHO_AM_I_XG;
+    
+    m_xfer_done = false;
+    err_code = nrf_drv_twi_tx(&amp;m_twi, LSM9DS1_address, &amp;who_am_i_address, 1, false);
+    APP_ERROR_CHECK(err_code);
+    while(m_xfer_done == false);
+    
+    NRF_LOG_INFO("tx completed");
+    NRF_LOG_FLUSH();
+}
+
+/**
+ * @brief Function for initialising the gyroscope in the sensor
+ *
+ * @param [in]  gConfig     structure holding the gyroscope configuration
+ */
+void LSM9DS1_initGyro(gyroConfig *gConfig)
+{
+    uint8_t tempRegValue = 0x00;        // Temporary value holder used to store the config byte
+    
+    tempRegValue = (gConfig-&gt;outputDataRate &lt;&lt; 5) | (gConfig-&gt;scale &lt;&lt; 3) | (gConfig-&gt;bandwidth);
+    writeToControlAddr(LSM9DS1_address, CTRL_REG1_G, tempRegValue); //Main control config register
+    
+    writeToControlAddr(LSM9DS1_address, CTRL_REG2_G, 0x00);         //No interrupts are being used
+    
+    tempRegValue = 0x00;
+    tempRegValue = (gConfig-&gt;lowPowerMode &lt;&lt; 7) | (gConfig-&gt;HPF_Enable &lt;&lt; 6) | (gConfig-&gt;HPFG_val);
+    writeToControlAddr(LSM9DS1_address, CTRL_REG3_G, tempRegValue);
+    
+    tempRegValue = 0x00;
+    tempRegValue = (gConfig-&gt;enableX &lt;&lt; 3) | (gConfig-&gt;enableY &lt;&lt; 4) | (gConfig-&gt;enableZ &lt;&lt; 5) | (gConfig-&gt;latchInterrupt &lt;&lt; 1);
+    writeToControlAddr(LSM9DS1_address, CTRL_REG4, tempRegValue);
+    
+    tempRegValue = 0x00;
+    tempRegValue = (gConfig-&gt;flipX &lt;&lt; 5) | (gConfig-&gt;flipY &lt;&lt; 4) | (gConfig-&gt;flipZ &lt;&lt; 3);
+    writeToControlAddr(LSM9DS1_address, ORIENT_CFG_G, tempRegValue);
+    
+    NRF_LOG_INFO("Gyroscopt Initialised Successfully");
+    
+}
+
+/**
+ * @brief Function for initialising the accelerometer in the sensor
+ *
+ * @param [in]  aConfig     structure holding the accelerometer configuration
+ */
+void LSM9DS1_initAccel(accelConfig *aConfig)
+{
+    uint8_t tempRegValue = 0x00;
+    
+    tempRegValue = (aConfig-&gt;enableX &lt;&lt; 3) | (aConfig-&gt;enableY &lt;&lt; 4) | (aConfig-&gt;enableZ &lt;&lt; 5);
+    writeToControlAddr(LSM9DS1_address, CTRL_REG5_XL, tempRegValue);
+    
+    tempRegValue = 0x00;
+    tempRegValue = (aConfig-&gt;outputDataRate &lt;&lt; 5) | (aConfig-&gt;scale &lt;&lt; 3) | (aConfig-&gt;bandwidth) | (aConfig-&gt;selectBWAuto &lt;&lt; 2);
+    writeToControlAddr(LSM9DS1_address, CTRL_REG6_XL, tempRegValue);
+    
+    tempRegValue = 0x00;
+    tempRegValue = (aConfig-&gt;highResEnable &lt;&lt; 7) | (aConfig-&gt;highResBandwidth &lt;&lt; 5);
+    writeToControlAddr(LSM9DS1_address, CTRL_REG7_XL, tempRegValue);
+    
+    NRF_LOG_INFO("Accelerotmeter Initialised successfully");
+    
+}
+
+/**
+ * @brief Function for initialising the sensor
+ */
+extern void LSM9DS1_init()
+{
+    ret_code_t err_code;
+    
+    uint8_t who_am_i_address = WHO_AM_I_XG;
+    
+    NRF_LOG_INFO("Initialisation Started");
+    NRF_LOG_FLUSH();
+    
+    m_xfer_done = false;
+    err_code = nrf_drv_twi_tx(&amp;m_twi, LSM9DS1_address, &amp;who_am_i_address, 1, false);
+    APP_ERROR_CHECK(err_code);
+    while(m_xfer_done == false);
+    
+    NRF_LOG_INFO("tx completed");
+    NRF_LOG_FLUSH();
+    
+    m_xfer_done = false;
+    err_code = nrf_drv_twi_rx(&amp;m_twi, LSM9DS1_address, &amp;m_sample, 1);
+    APP_ERROR_CHECK(err_code);
+    while(m_xfer_done == false);
+    
+    NRF_LOG_INFO("Reply: %x", m_sample);
+    
+    gyroConfig gConfig = {
+        .outputDataRate = ODR_G_119,
+        .scale = SCALE_G_245,
+        .bandwidth = BANDWIDTH_G_10,
+        .lowPowerMode = DISABLE_G_LOWP_MODE,
+        .HPF_Enable = HPF_G_DISABLE,
+        .HPFG_val = HPFG_G_0000,
+        .latchInterrupt = NO_LATCH_G_INT,
+        .enableZ = ENABLE_GYRO_AXIS,
+        .enableX = ENABLE_GYRO_AXIS,
+        .enableY = ENABLE_GYRO_AXIS,
+        .flipX = NO_FLIP_GYRO_AXIS,
+        .flipY = NO_FLIP_GYRO_AXIS,
+        .flipZ = NO_FLIP_GYRO_AXIS
+    };
+    
+    accelConfig aConfig = {
+        .outputDataRate = ODR_X_119,
+        .enableX = ENABLE_X_ACCEL_AXIS,
+        .enableY = ENABLE_X_ACCEL_AXIS,
+        .enableZ = ENABLE_X_ACCEL_AXIS,
+        .scale = SCALE_X_8G,
+        .bandwidth = BANDWIDTH_X_408HZ,
+        .selectBWAuto = SELECT_X_BW_AUTO,
+        .highResEnable = DISABLE_X_HIGHRES,
+        .highResBandwidth = HIGHRES_BANDWIDTH_X_50
+    };
+    
+    switch(aConfig.scale)
+    {
+        case SCALE_X_2G:
+            m_a_res = 2;
+            break;
+            
+        case SCALE_X_16G:
+            m_a_res = 16;
+            break;
+            
+        case SCALE_X_4G:
+            m_a_res = 4;
+            break;
+            
+        case SCALE_X_8G:
+            m_a_res = 8;
+            break;
+            
+        default:
+            break;
+    }
+        
+    switch(gConfig.scale)
+    {
+        case SCALE_G_245:
+            m_g_res = 245;
+            break;
+        
+        case SCALE_G_500:
+            m_g_res = 500;
+            break;
+            
+         case SCALE_G_2000:
+            m_g_res = 2000;
+            break;
+         
+         default:
+            break;
+    }
+        
+    LSM9DS1_initGyro(&amp;gConfig);
+    LSM9DS1_initAccel(&amp;aConfig);
+}
+
+/**
+ * @brief Function for calculating the actual value (float) of the accelerometer.
+ *
+ * @param[in] aValHolder    structure holding the value of the accelerometer and the output real value (float)
+ */
+extern void calcAccelActualVal(accelValHolder *aValHolder)
+{
+    if(aValHolder-&gt;ax &lt;= (0xFFFF &gt;&gt; 1))
+    {
+        aValHolder-&gt;ax_actual = ((float)m_a_res/32768)*aValHolder-&gt;ax;
+    }else
+    {
+        uint16_t temp = ~aValHolder-&gt;ax;
+        aValHolder-&gt;ax_actual = -((float)m_a_res/32768)*temp;
+    }
+    
+    if(aValHolder-&gt;ay &lt;= (0xFFFF &gt;&gt; 1))
+    {
+        aValHolder-&gt;ay_actual = ((float)m_a_res/32768)*aValHolder-&gt;ay;
+    }else
+    {
+        uint16_t temp = ~aValHolder-&gt;ay;
+        aValHolder-&gt;ay_actual = -((float)m_a_res/32768)*temp;
+    }
+    
+    if(aValHolder-&gt;az &lt;= (0xFFFF &gt;&gt; 1))
+    {
+        aValHolder-&gt;az_actual = ((float)m_a_res/32768)*aValHolder-&gt;az;
+    }else
+    {
+        uint16_t temp = ~aValHolder-&gt;az;
+        aValHolder-&gt;az_actual = -((float)m_a_res/32768)*temp;
+    }
+    
+}
+
+/**
+ * @brief Function for calculating the actual value (float) of the gyroscope
+ *
+ * @param[in] gValHolder    structure holding the value of the gyroscope and the output real value (float)
+ */
+extern void calcGyroActualVal(gyroValHolder *gValHolder)
+{
+    if(gValHolder-&gt;gx &lt;= (0xFFFF &gt;&gt; 1))
+    {
+        gValHolder-&gt;gx_actual = ((float)m_g_res/32768)*gValHolder-&gt;gx;
+    }else
+    {
+        uint16_t temp = ~gValHolder-&gt;gx;
+        gValHolder-&gt;gx_actual = -((float)m_g_res/32768)*temp;
+    }
+    
+    if(gValHolder-&gt;gy &lt;= (0xFFFF &gt;&gt; 1))
+    {
+        gValHolder-&gt;gy_actual = ((float)m_g_res/32768)*gValHolder-&gt;gy;
+    }else
+    {
+        uint16_t temp = ~gValHolder-&gt;gy;
+        gValHolder-&gt;gy_actual = -((float)m_g_res/32768)*temp;
+    }
+    
+    if(gValHolder-&gt;gz &lt;= (0xFFFF &gt;&gt; 1))
+    {
+        gValHolder-&gt;gz_actual = ((float)m_g_res/32768)*gValHolder-&gt;gz;
+    }else
+    {
+        uint16_t temp = ~gValHolder-&gt;gz;
+        gValHolder-&gt;gz_actual = -((float)m_g_res/32768)*temp;
+    }
+    
+}
+
+/**
+ * @brief Function for handling data from temperature sensor.
+ *
+ * @param[in] temp          Temperature in Celsius degrees read from sensor.
+ */
+__STATIC_INLINE void data_handler(uint8_t temp)
+{
+    NRF_LOG_INFO("Temperature: %d Celsius degrees.", temp);
+}
+
+/**
+ * @brief TWI events handler.
+ */
+void twi_handler(nrf_drv_twi_evt_t const * p_event, void * p_context)
+{
+    
+    switch (p_event-&gt;type)
+    {
+        case NRF_DRV_TWI_EVT_DONE:
+            /*if (p_event-&gt;xfer_desc.type == NRF_DRV_TWI_XFER_RX)
+            {
+                data_handler(m_sample);
+            }*/
+            m_xfer_done = true;
+            break;
+        
+        case NRF_DRV_TWI_EVT_ADDRESS_NACK:
+            NRF_LOG_INFO("No response from slave device");
+            NRF_LOG_FLUSH();
+            m_xfer_done = true;
+            break;
+            
+        case NRF_DRV_TWI_EVT_DATA_NACK:
+            NRF_LOG_INFO("No data response from the device");
+            NRF_LOG_FLUSH();
+            m_xfer_done = true;
+            break;
+            
+        default:
+            break;
+    }
+}
+
+/**
+ * @brief UART initialization.
+ */
+extern void twi_init (void)
+{
+    ret_code_t err_code;
+    
+    NRF_LOG_INFO("Entered twi_init");
+    const nrf_drv_twi_config_t twi_lsm9ds1_config = {
+       .scl                = ARDUINO_SCL_PIN,
+       .sda                = ARDUINO_SDA_PIN,
+       .frequency          = NRF_TWI_FREQ_250K,
+       .interrupt_priority = APP_IRQ_PRIORITY_MID,
+       .clear_bus_init     = false
+    };
+
+    err_code = nrf_drv_twi_init(&amp;m_twi, &amp;twi_lsm9ds1_config, twi_handler, NULL);
+    APP_ERROR_CHECK(err_code);
+
+    nrf_drv_twi_enable(&amp;m_twi);
+}
+
+
+/**
+ * @brief Function to read a register from an I2C device
+ *
+ * @param[in] deviceAddress     I2C address of the 
+ */
+ 
+extern void readFromDevice(uint8_t deviceAddress, uint8_t *subaddress, uint8_t *receivedData, uint8_t length)
+{
+    ret_code_t err_code;
+    
+    m_xfer_done = false;
+    err_code = nrf_drv_twi_tx(&amp;m_twi, deviceAddress, subaddress, 1, true);
+    APP_ERROR_CHECK(err_code);
+    while(m_xfer_done == false);
+    
+    m_xfer_done = false;
+    err_code = nrf_drv_twi_rx(&amp;m_twi, deviceAddress, receivedData, length);
+    APP_ERROR_CHECK(err_code);
+    while(m_xfer_done == false);
+}
+
+/**
+ * @brief Function to read a register from an I2C device (MSB)
+ *
+ * @param[in]   deviceAddress       I2C address of the device
+ * @param[in]   *subaddress         register address
+ * @param[out]  *receivedData       pointer to store received data
+ */
+ 
+extern void readFromDeviceUpper(uint8_t deviceAddress, uint8_t *subaddress, uint8_t *receivedData)
+{
+    ret_code_t err_code;
+    
+    uint8_t length = 2;
+    uint8_t tempReceivedData[2];
+    
+    m_xfer_done = false;
+    err_code = nrf_drv_twi_tx(&amp;m_twi, deviceAddress, subaddress, 1, true);
+    APP_ERROR_CHECK(err_code);
+    while(m_xfer_done == false);
+    
+    m_xfer_done = false;
+    err_code = nrf_drv_twi_rx(&amp;m_twi, deviceAddress, tempReceivedData, length);
+    APP_ERROR_CHECK(err_code);
+    while(m_xfer_done == false);
+    
+    *receivedData = tempReceivedData[1];
+}
+
+/**
+ * @brief Function to read a register from an I2C device (LSB)
+ *
+ * @param[in]   deviceAddress       I2C address of the device
+ * @param[in]   *subaddress         register address
+ * @param[out]  *receivedData       pointer to store received data
+ */
+ 
+extern void readFromDeviceLower(uint8_t deviceAddress, uint8_t *subaddress, uint8_t *receivedData)
+{
+    ret_code_t err_code;
+    
+    uint8_t length = 2;
+    uint8_t tempReceivedData[2];
+    
+    m_xfer_done = false;
+    err_code = nrf_drv_twi_tx(&amp;m_twi, deviceAddress, subaddress, 1, true);
+    APP_ERROR_CHECK(err_code);
+    while(m_xfer_done == false);
+    
+    m_xfer_done = false;
+    err_code = nrf_drv_twi_rx(&amp;m_twi, deviceAddress, tempReceivedData, length);
+    APP_ERROR_CHECK(err_code);
+    while(m_xfer_done == false);
+    
+    *receivedData = tempReceivedData[0];
+}
+
+/**
+ * @brief Function to write to a register of an I2C device (LSB)
+ *
+ * @param[in]   deviceAddress       I2C address of the device
+ * @param[in]   ctrlAddr            register address to be written
+ * @param[in]   writeData           data to be written
+ */
+ 
+extern void writeToDeviceLower(uint8_t deviceAddress, uint8_t ctrlAddr, uint8_t writeData)
+{
+    ret_code_t err_code;
+    
+    uint8_t currentData[2];
+    
+    readFromDevice(deviceAddress, &amp;ctrlAddr, currentData, 2);
+    
+    uint8_t reg[3] = {ctrlAddr, writeData, currentData[1]};
+    
+    m_xfer_done = false;
+    err_code = nrf_drv_twi_tx(&amp;m_twi, deviceAddress, reg, 3, false);
+    APP_ERROR_CHECK(err_code);
+    while(m_xfer_done == false);
+    
+//    NRF_LOG_INFO("CTRL Written");
+}
+
+/**
+ * @brief Function to write to a register of an I2C device (MSB)
+ *
+ * @param[in]   deviceAddress       I2C address of the device
+ * @param[in]   ctrlAddr            register address to be written
+ * @param[in]   writeData           data to be written
+ */
+ 
+extern void writeToDeviceUpper(uint8_t deviceAddress, uint8_t ctrlAddr, uint8_t writeData)
+{
+    ret_code_t err_code;
+    
+    uint8_t currentData[2];
+    
+    readFromDevice(deviceAddress, &amp;ctrlAddr, currentData, 2);
+    
+    uint8_t reg[3] = {ctrlAddr, currentData[0],  writeData};
+    
+    m_xfer_done = false;
+    err_code = nrf_drv_twi_tx(&amp;m_twi, deviceAddress, reg, 3, false);
+    APP_ERROR_CHECK(err_code);
+    while(m_xfer_done == false);
+    
+//    NRF_LOG_INFO("CTRL Written");
+}
+
+/**
+ * @brief Function for reading data from temperature sensor.
+ */
+//static void read_sensor_data()
+//{
+//    m_xfer_done = false;
+//
+//    /* Read 1 byte from the specified address - skip 3 bits dedicated for fractional part of temperature. */
+//    ret_code_t err_code = nrf_drv_twi_rx(&amp;m_twi, LM75B_ADDR, &amp;m_sample, sizeof(m_sample));
+//    APP_ERROR_CHECK(err_code);
+//}
+
+</pre>

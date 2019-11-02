@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Don Tilakumara</title>
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <script src="scripts/jquery-3.4.1.js"></script>
+</head>
+<body>
+
+    <div id="commonsection">
+        
+    </div>
+
+        
+    <div>
+        <h2 class="main-body-header card">Bluetooth LE Training Application Code</h2>
+    </div>
+
+    <div class="main-body">
+        
+        <p class="main-body-paragraph">Code used to setup and operate sensors</p>
+
+        <div id="game-console-code">
+            
+        </div>
+
+    </div>
+    
+    <script>
+        $( "#commonsection" ).load( "layouts/template.html" );
+        $( "#game-console-code" ).load( "layouts/bluetooth_le_training_code.html" );
+        
+        $(document).ready(function() {
+            $.getScript("scripts/run_prettify.js");
+        });
+    </script>
+
+    <!-- <script src="scripts/run_prettify.js" async></script> -->
+
+</body>
+<!-- This script is running at the end of html because it needs other javascripts to be complete before running -->
+
+
+</html>
