@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Don Tilakumara</title>
+	<link rel="stylesheet" type="text/css" href="style.css"/>
+    <script src="scripts/jquery-3.4.1.js"></script>
+</head>
+<body>
+
+	<div id="commonsection">
+        
+    </div>
+
+        
+	<div>
+        <h2 class="main-body-header card">Code Snippet From The Bluetooth Android Application</h2>
+    </div>
+
+	<div class="main-body">
+		
+		<p class="main-body-paragraph">
+            This application was developed to test the embedded devices developed in-house. It's purpose is to provide a developers environment to
+            connect, configure and test the Bluetooth embedded devices.
+        </p>
+
+		<p class="main-body-paragraph">Android code snippet of the Bluetooth application</p>
+
+        <div id="game-console-code">
+            
+        </div>
+
+	</div>
+	
+    <script>
+        $( "#commonsection" ).load( "layouts/template.html" );
+        $( "#game-console-code" ).load( "layouts/android_application_code.html" );
+        
+        $(document).ready(function() {
+            $.getScript("scripts/run_prettify.js");
+        });
+    </script>
+
+    <!-- <script src="scripts/run_prettify.js" async></script> -->
+
+</body>
+<!-- This script is running at the end of html because it needs other javascripts to be complete before running -->
+
+
+</html>

@@ -1,0 +1,623 @@
+
+<pre class="prettyprint">
+
+//Author: Don Nadeesha Tilakumara
+//Company: ClassifAI PTY LTD
+//Programming Language: Java
+//File: LSM9DS1Activity.java
+//Copyright 2019 ClassifAI PTY LTD
+
+
+package com.example.don_i9.bluetooth_v2;
+
+import android.app.Activity;
+import android.app.FragmentManager;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattService;
+import android.bluetooth.BluetoothManager;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
+import android.os.IBinder;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.don_i9.bluetooth_v2.graph_classes.GraphValueHolder;
+import com.example.don_i9.bluetooth_v2.lsm9ds1Activity.Lsm9ds1Manager;
+import com.example.don_i9.bluetooth_v2.lsm9ds1Activity.Lsm9ds1ManagerCallbacks;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.LegendRenderer;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class LSM9DS1Activity extends AppCompatActivity implements LightingDialog.OnBondedDeviceSelectedListener{
+
+    TextView tv_Gx;
+    TextView tv_Gy;
+    TextView tv_Gz;
+
+    TextView tv_Ax;
+    TextView tv_Ay;
+    TextView tv_Az;
+
+    TextView textViewState;
+    TextView textViewResponse;
+    TextView textViewDeviceName;
+    TextView textViewDeviceAddress;
+
+    Button btn_connect;
+    RadioButton rbtn_Accel;
+    RadioButton rbtn_Gyro;
+    RadioGroup radioGroup;
+
+    LineGraphSeries&lt;DataPoint&gt; seriesAccelX;
+    LineGraphSeries&lt;DataPoint&gt; seriesAccelY;
+    LineGraphSeries&lt;DataPoint&gt; seriesAccelZ;
+
+    LineGraphSeries&lt;DataPoint&gt; seriesGyroX;
+    LineGraphSeries&lt;DataPoint&gt; seriesGyroY;
+    LineGraphSeries&lt;DataPoint&gt; seriesGyroZ;
+
+    GraphView graphViewZ;
+    GraphView graphViewX;
+    GraphView graphViewY;
+
+    DataPoint dataPointAccelX[];
+    DataPoint dataPointAccelY[];
+    DataPoint dataPointAccelZ[];
+
+    DataPoint dataPointGyroX[];
+    DataPoint dataPointGyroY[];
+    DataPoint dataPointGyroZ[];
+
+    int currentDataPoint = 200;
+
+    GraphValueHolder graphAccelValueHolderZ;
+    GraphValueHolder graphAccelValueHolderX;
+    GraphValueHolder graphAccelValueHolderY;
+
+    GraphValueHolder graphGyroValueHolderX;
+    GraphValueHolder graphGyroValueHolderY;
+    GraphValueHolder graphGyroValueHolderZ;
+
+    ProgressBar mProgressBar;
+    private BluetoothAdapter mBluetoothAdapter;
+    private Lsm9ds1Manager mLsm9ds1Manager;
+    private String mConnectionState;
+
+    LightingDialog lightingDialog;
+    LinearLayout linearLayoutBackground;
+
+    private static final int RQS_ENABLE_BLUETOOTH = 1;
+    private String TAG = LSM9DS1Activity.class.getSimpleName();
+
+    private String mDeviceName;
+    private String mDeviceAddress;
+
+    private int numberOfDataPoints = 200;
+
+    private long timer_val;
+    private boolean mScanning = false;
+    private boolean mConnected = false;
+    private boolean updateGraphsWithGyro = false;
+    private boolean updateGraphsWithAccel = false;
+
+    private String unknownCharString = "Unknown Characteristic";
+
+    float accelerometer_res = 8;
+    float gyroscope_res = 245;
+    int numNotifications = 0;
+
+    private void enableUI(){
+        rbtn_Gyro.setEnabled(true);
+        rbtn_Accel.setEnabled(true);
+    }
+
+    private void disableUI(){
+        rbtn_Gyro.setEnabled(false);
+        rbtn_Accel.setEnabled(false);
+    }
+
+
+    //Interface from Lighting Dialog
+    @Override
+    public void onBondedDeviceSelected(BluetoothDevice device) {
+        mDeviceAddress = device.getAddress();
+        mDeviceName = device.getName();
+
+        if(mLsm9ds1Manager != null){
+            mLsm9ds1Manager.connect(device);
+            Toast.makeText(this,mDeviceAddress,Toast.LENGTH_LONG).show();
+        }
+    }
+
+    //Callbacks from the Bluetooth Manager
+    Lsm9ds1ManagerCallbacks mLsm9ds1ManagerCallbacks = new Lsm9ds1ManagerCallbacks() {
+        @Override
+        public void onAccelNotified(byte[] data) {
+            //updateAccelValues(data);
+            numNotifications = numNotifications+1;
+            textViewResponse.setText(String.format("%d", numNotifications));
+        }
+
+        @Override
+        public void onGyroNotified(byte[] data) {
+            //updateGyroValues(data);
+        }
+
+        @Override
+        public void onDeviceConnecting(BluetoothDevice device) {
+            mConnectionState = ConnectionStates.ACTION_GATT_CONNECTING;
+        }
+
+        @Override
+        public void onDeviceConnected(BluetoothDevice device) {
+            mConnectionState = ConnectionStates.ACTION_GATT_CONNECTED;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mConnected = true;
+                    mProgressBar.setVisibility(View.INVISIBLE);
+                    linearLayoutBackground.setAlpha(1.0f);
+                    btn_connect.setEnabled(false);
+                    lightingDialog.dismiss();
+                    enableUI();
+                    updateConnectionState(ConnectionStates.ACTION_GATT_CONNECTED);
+                }
+            });
+        }
+
+        @Override
+        public void onDeviceDisconnecting(BluetoothDevice device) {
+            mConnectionState = ConnectionStates.ACTION_GATT_DISCONNECTING;
+        }
+
+        @Override
+        public void onDeviceDisconnected(BluetoothDevice device) {
+            mConnectionState = ConnectionStates.ACTION_GATT_DISCONNECTED;
+            updateConnectionState(mConnectionState);
+            mConnected = false;
+        }
+
+        @Override
+        public void onLinklossOccur(BluetoothDevice device) {
+            mConnectionState = ConnectionStates.ACTION_GATT_DISCONNECTED;
+            mConnected = false;
+        }
+
+        @Override
+        public void onServicesDiscovered(BluetoothDevice device, boolean optionalServicesFound) {
+            mConnectionState = ConnectionStates.ACTION_GATT_SERVICES_DISCOVERED;
+        }
+
+        @Override
+        public void onDeviceReady(BluetoothDevice device) {
+            mConnectionState = ConnectionStates.ACTION_DEVICE_READY;
+        }
+
+        @Override
+        public boolean shouldEnableBatteryLevelNotifications(BluetoothDevice device) {
+            return false;
+        }
+
+        @Override
+        public void onBatteryValueReceived(BluetoothDevice device, int value) {
+
+        }
+
+        @Override
+        public void onBondingRequired(BluetoothDevice device) {
+
+        }
+
+        @Override
+        public void onBonded(BluetoothDevice device) {
+
+        }
+
+        @Override
+        public void onError(BluetoothDevice device, String message, int errorCode) {
+
+        }
+
+        @Override
+        public void onDeviceNotSupported(BluetoothDevice device) {
+
+        }
+    };
+
+    private void getBluetoothAdapterAndLeScanner(){
+        //Getting bluetooth adapter and bluetooth scanner
+        final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
+        mBluetoothAdapter = bluetoothManager.getAdapter();
+        //mBluetoothLeScanner = mBluetoothAdapter.getBluetoothLeScanner();
+
+        mScanning = false;
+    }
+
+
+    private void cleanupWhenDisconnected(){
+        textViewDeviceName.setText("");
+        textViewDeviceAddress.setText("");
+        textViewResponse.setText("");
+        mDeviceAddress = null;
+        mDeviceName = null;
+    }
+
+    private void updateConnectionState(final String st) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                textViewState.setText(st);
+                textViewDeviceName.setText(mDeviceName);
+                textViewDeviceAddress.setText(mDeviceAddress);
+            }
+        });
+    }
+
+    private void showDialog(View v){
+        FragmentManager fragmentManager = getFragmentManager();
+        lightingDialog = new LightingDialog();
+        //lightingDialog.setStyle(DialogFragment.STYLE_NORMAL, R.style.styleDialog);
+        lightingDialog.show(fragmentManager, "LightingDialog");
+    }
+
+    private void updateGyroValues(byte[] data){
+
+        int gx = (((data[1] &amp; 0xFF) &lt;&lt; 8) | (data[0] &amp; 0xFF));
+        int gy = (((data[3] &amp; 0xFF) &lt;&lt; 8) | (data[2] &amp; 0xFF));
+        int gz = (((data[5] &amp; 0xFF) &lt;&lt; 8) | (data[4] &amp; 0xFF));
+
+        final float gx_act;
+        final float gy_act;
+        final float gz_act;
+
+        if(gx &lt;= 32768){
+            gx_act = (float)(gyroscope_res/32768)*gx;
+        }else{
+            gx_act = (float)-(gyroscope_res/32768)*(65536-gx);
+        }
+        if(gy &lt;= 32768){
+            gy_act = (float)(gyroscope_res/32768)*gy;
+        }else{
+            gy_act = (float)-(gyroscope_res/32768)*(65536-gy);
+        }
+        if(gz &lt;= 32768){
+            gz_act = (float)(gyroscope_res/32768)*gz;
+        }else{
+            gz_act = (float)-(gyroscope_res/32768)*(65536-gz);
+        }
+
+//        tv_Gx.setText(String.format("%d", gx));
+//        tv_Gy.setText(String.format("%d", gy));
+//        tv_Gz.setText(String.format("%d", gz));
+
+        tv_Gx.setText(String.format("%.2f", gx_act));
+        tv_Gy.setText(String.format("%.2f", gy_act));
+        tv_Gz.setText(String.format("%.2f", gz_act));
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                graphGyroValueHolderZ.addAutoXManualY(gz_act);
+                graphGyroValueHolderX.addAutoXManualY(gx_act);
+                graphGyroValueHolderY.addAutoXManualY(gy_act);
+
+                if(updateGraphsWithGyro) {
+                    for (int i = 0; i &lt; numberOfDataPoints; i++) {
+                        dataPointGyroZ[i] = new DataPoint((double) i, graphGyroValueHolderZ.getY(i));
+                        dataPointGyroX[i] = new DataPoint((double) i, graphGyroValueHolderX.getY(i));
+                        dataPointGyroY[i] = new DataPoint((double) i, graphGyroValueHolderY.getY(i));
+                    }
+                    //Running on UI thread since this action updates the UI
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            seriesGyroZ.resetData(dataPointGyroZ);
+                            seriesGyroY.resetData(dataPointGyroY);
+                            seriesGyroX.resetData(dataPointGyroX);
+                        }
+                    });
+                }
+            }
+        }).start();
+
+    }
+
+    private void updateAccelValues(byte[] data){
+
+        int ax = (((data[1] &amp; 0xFF) &lt;&lt; 8) | (data[0] &amp; 0xFF));
+        int ay = (((data[3] &amp; 0xFF) &lt;&lt; 8) | (data[2] &amp; 0xFF));
+        int az = (((data[5] &amp; 0xFF) &lt;&lt; 8) | (data[4] &amp; 0xFF));
+
+        final float ax_act;
+        final float ay_act;
+        final float az_act;
+
+        if(ax &lt;= 32768){
+            ax_act = (float)(accelerometer_res/32768)*ax;
+        }else{
+            ax_act = (float)-(accelerometer_res/32768)*(65536-ax);
+        }
+        if(ay &lt;= 32768){
+            ay_act = (float)(accelerometer_res/32768)*ay;
+        }else{
+            ay_act = (float)-(accelerometer_res/32768)*(65536-ay);
+        }
+        if(az &lt;= 32768){
+            az_act = (float)(accelerometer_res/32768)*az;
+        }else{
+            az_act = (float)-(accelerometer_res/32768)*(65536-az);
+        }
+
+//        tv_Ax.setText(String.format("%d", ax));
+//        tv_Ay.setText(String.format("%d", ay));
+//        tv_Az.setText(String.format("%d", az));
+
+        tv_Ax.setText(String.format("%.2f", ax_act));
+        tv_Ay.setText(String.format("%.2f", ay_act));
+        tv_Az.setText(String.format("%.2f", az_act));
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                graphAccelValueHolderZ.addAutoXManualY(az_act);
+                graphAccelValueHolderX.addAutoXManualY(ax_act);
+                graphAccelValueHolderY.addAutoXManualY(ay_act);
+
+                if(updateGraphsWithAccel){
+                    for(int i = 0; i &lt; numberOfDataPoints; i++){
+                        dataPointAccelZ[i] = new DataPoint((double)i, graphAccelValueHolderZ.getY(i));
+                        dataPointAccelX[i] = new DataPoint((double)i, graphAccelValueHolderX.getY(i));
+                        dataPointAccelY[i] = new DataPoint((double)i, graphAccelValueHolderY.getY(i));
+                    }
+                    //Running on UI thread since this action updates the UI
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            seriesAccelZ.resetData(dataPointAccelZ);
+                            seriesAccelY.resetData(dataPointAccelY);
+                            seriesAccelX.resetData(dataPointAccelX);
+                        }
+                    });
+                }
+            }
+        }).start();
+    }
+
+    private final Button.OnClickListener btn_connectOnClickListener = new Button.OnClickListener(){
+        @Override
+        public void onClick(View view) {
+            showDialog(view);
+        }
+    };
+
+    private void initialiseGraph(){
+
+        seriesAccelX.setTitle("Ax");
+        seriesAccelY.setTitle("Ay");
+        seriesAccelZ.setTitle("Az");
+
+        graphViewZ.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
+        graphViewX.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
+        graphViewY.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
+
+        graphViewZ.getLegendRenderer().setVisible(true);
+        graphViewX.getLegendRenderer().setVisible(true);
+        graphViewY.getLegendRenderer().setVisible(true);
+
+        graphViewZ.addSeries(seriesAccelZ);
+        graphViewZ.getViewport().setMinX(0);
+        graphViewZ.getViewport().setMaxX(199);
+        graphViewZ.getViewport().setMinY(0.5);
+        graphViewZ.getViewport().setMaxY(1.5);
+        graphViewZ.getViewport().setXAxisBoundsManual(true);
+        graphViewZ.getViewport().setYAxisBoundsManual(true);
+
+        graphViewX.addSeries(seriesAccelX);
+        graphViewX.getViewport().setMinX(0);
+        graphViewX.getViewport().setMaxX(199);
+        graphViewX.getViewport().setMinY(-1);
+        graphViewX.getViewport().setMaxY(1);
+        graphViewX.getViewport().setXAxisBoundsManual(true);
+        graphViewX.getViewport().setYAxisBoundsManual(true);
+
+        graphViewY.addSeries(seriesAccelY);
+        graphViewY.getViewport().setMinX(0);
+        graphViewY.getViewport().setMaxX(199);
+        graphViewY.getViewport().setMinY(-1);
+        graphViewY.getViewport().setMaxY(1);
+        graphViewY.getViewport().setXAxisBoundsManual(true);
+        graphViewY.getViewport().setYAxisBoundsManual(true);
+    }
+
+    private final RadioGroup.OnCheckedChangeListener radioGroupOnCheckedChangedListener = new RadioGroup.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(RadioGroup radioGroup, int i) {
+            if(i == R.id.rb_accelerometer_id){
+                updateGraphsWithAccel = true;
+                updateGraphsWithGyro = false;
+                graphViewX.removeAllSeries();
+                graphViewY.removeAllSeries();
+                graphViewZ.removeAllSeries();
+
+                graphViewZ.getViewport().setMinY(0.5);
+                graphViewZ.getViewport().setMaxY(1.5);
+                graphViewX.getViewport().setMinY(-0.5);
+                graphViewX.getViewport().setMaxY(0.5);
+                graphViewY.getViewport().setMinY(-0.5);
+                graphViewY.getViewport().setMaxY(0.5);
+
+                graphViewX.addSeries(seriesAccelX);
+                graphViewY.addSeries(seriesAccelY);
+                graphViewZ.addSeries(seriesAccelZ);
+
+            }else if(i == R.id.rb_gyroscope_id){
+                updateGraphsWithAccel = false;
+                updateGraphsWithGyro = true;
+                graphViewX.removeAllSeries();
+                graphViewY.removeAllSeries();
+                graphViewZ.removeAllSeries();
+
+                graphViewZ.getViewport().setMinY(-gyroscope_res);
+                graphViewZ.getViewport().setMaxY(gyroscope_res);
+                graphViewX.getViewport().setMinY(-gyroscope_res);
+                graphViewX.getViewport().setMaxY(gyroscope_res);
+                graphViewY.getViewport().setMinY(-gyroscope_res);
+                graphViewY.getViewport().setMaxY(gyroscope_res);
+
+                graphViewX.addSeries(seriesGyroX);
+                graphViewY.addSeries(seriesGyroY);
+                graphViewZ.addSeries(seriesGyroZ);
+            }
+        }
+    };
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_lsm9ds1);
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        mLsm9ds1Manager = new Lsm9ds1Manager(this);
+        mLsm9ds1Manager.setGattCallbacks(mLsm9ds1ManagerCallbacks);
+
+        tv_Gx = (TextView) findViewById(R.id.tv_Gx_id);
+        tv_Gy = (TextView) findViewById(R.id.tv_Gy_id);
+        tv_Gz = (TextView) findViewById(R.id.tv_Gz_id);
+
+        tv_Ax = (TextView) findViewById(R.id.tv_Ax_id);
+        tv_Ay = (TextView) findViewById(R.id.tv_Ay_id);
+        tv_Az = (TextView) findViewById(R.id.tv_Az_id);
+
+        textViewState = (TextView) findViewById(R.id.tv_state);
+        textViewResponse = (TextView) findViewById(R.id.tv_response);
+        textViewDeviceName = (TextView) findViewById(R.id.tv_deviceName);
+        textViewDeviceAddress = (TextView) findViewById(R.id.tv_deviceAddress);
+
+        linearLayoutBackground = (LinearLayout) findViewById(R.id.a_loadingBackground);
+        btn_connect = (Button) findViewById(R.id.btn_connect_id);
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar1);
+
+        rbtn_Accel = (RadioButton) findViewById(R.id.rb_accelerometer_id);
+        rbtn_Gyro = (RadioButton) findViewById(R.id.rb_gyroscope_id);
+        radioGroup = (RadioGroup) findViewById(R.id.rg_accel_gyro_id);
+
+        btn_connect.setOnClickListener(btn_connectOnClickListener);
+        radioGroup.setOnCheckedChangeListener(radioGroupOnCheckedChangedListener);
+
+        graphViewX = (GraphView) findViewById(R.id.accel_graph_x_id);
+        graphViewY = (GraphView) findViewById(R.id.accel_graph_y_id);
+        graphViewZ = (GraphView) findViewById(R.id.accel_graph_z_id);
+
+        seriesAccelX = new LineGraphSeries&lt;DataPoint&gt;();
+        seriesAccelY = new LineGraphSeries&lt;DataPoint&gt;();
+        seriesAccelZ = new LineGraphSeries&lt;DataPoint&gt;();
+
+        seriesGyroX = new LineGraphSeries&lt;DataPoint&gt;();
+        seriesGyroY = new LineGraphSeries&lt;DataPoint&gt;();
+        seriesGyroZ = new LineGraphSeries&lt;DataPoint&gt;();
+
+        dataPointAccelZ = new DataPoint[numberOfDataPoints];
+        dataPointAccelX = new DataPoint[numberOfDataPoints];
+        dataPointAccelY = new DataPoint[numberOfDataPoints];
+
+        dataPointGyroX = new DataPoint[numberOfDataPoints];
+        dataPointGyroY = new DataPoint[numberOfDataPoints];
+        dataPointGyroZ = new DataPoint[numberOfDataPoints];
+
+        graphAccelValueHolderZ = new GraphValueHolder(numberOfDataPoints);
+        graphAccelValueHolderX = new GraphValueHolder(numberOfDataPoints);
+        graphAccelValueHolderY = new GraphValueHolder(numberOfDataPoints);
+
+        graphGyroValueHolderZ = new GraphValueHolder(numberOfDataPoints);
+        graphGyroValueHolderX = new GraphValueHolder(numberOfDataPoints);
+        graphGyroValueHolderY = new GraphValueHolder(numberOfDataPoints);
+
+        //Check if BLE is supported
+        if(!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            Toast.makeText(this, "Bluetooth LE is not supported on this device", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
+        initialiseGraph();
+
+        getBluetoothAdapterAndLeScanner();
+        disableUI();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.v(TAG, "OnResume");
+
+        if(!mBluetoothAdapter.isEnabled()){
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, RQS_ENABLE_BLUETOOTH);
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        mBluetoothAdapter.cancelDiscovery();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(mLsm9ds1Manager != null){
+            mLsm9ds1Manager.disconnect();
+            mLsm9ds1Manager.close();
+            mLsm9ds1Manager = null;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == RQS_ENABLE_BLUETOOTH &amp;&amp; resultCode == Activity.RESULT_CANCELED) {
+            finish();
+            return;
+        }
+
+        getBluetoothAdapterAndLeScanner();
+
+        // Checks if Bluetooth is supported on the device.
+        if (mBluetoothAdapter == null) {
+            Toast.makeText(this,
+                    "bluetoothManager.getAdapter()==null",
+                    Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+}
+</pre>
