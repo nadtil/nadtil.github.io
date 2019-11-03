@@ -69,6 +69,7 @@ figure {
 
 .caption-center {
 	text-align: center;
+	font-weight: bold;
 }
 
 .abc {
@@ -284,6 +285,11 @@ figure {
 
 .sc_button_special_colour {
 	background-color: #ADD1CE;
+}
+
+.sc-figure-properties {
+	display: inline-table;
+	border: 1px solid;
 }
 /*Edit Force*/
 
