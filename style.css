@@ -58,6 +58,19 @@ button,input,select,textarea,optgroup {
 	color: inherit;
 }
 
+figure {
+	display: table;
+}
+
+.table-row {
+	display: table-row;
+	width: 350px;
+}
+
+.caption-center {
+	text-align: center;
+}
+
 .abc {
 	color: blue;
 	transition: color 0.2s ease-in-out;
@@ -250,6 +263,14 @@ button,input,select,textarea,optgroup {
 	/*width: 1000px;*/
 }
 
+.img-style-smaller {
+	height: auto;
+	width: 100%;
+	max-width: 350px;
+	filter: brightness(140%);
+	/*width: 1000px;*/
+}
+
 .img-style-medium {
 	height: auto;
 	width: 100%;
@@ -261,6 +282,8 @@ button,input,select,textarea,optgroup {
 	/*width: 1000px;*/
 }
 
-
+.sc_button_special_colour {
+	background-color: #ADD1CE;
+}
 /*Edit Force*/
 
