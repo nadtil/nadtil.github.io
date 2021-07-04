@@ -1,0 +1,286 @@
+.firstSectionSurgicalMasks{
+	/*display: flex;*/
+	/*flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;*/
+	/*align-content: center;*/
+	/*align-items: center;*/ /*column items centered horizontally*/
+	/*min-height: 45rem;*/
+	/*margin-top: 4.5rem;*/
+	position: relative;
+	overflow: hidden;
+	height: 35rem;
+	max-width: 80rem;
+	margin: auto;
+}
+
+/*.surgicalMasksImageSection{
+	max-width: 100%;
+	position: absolute;
+	float: left;
+	overflow-x: hidden;
+	overflow-y: hidden;
+	margin-top: 4.5rem;
+	height: 30rem;
+}*/
+
+.surgicalMasksImageSection{
+	/*order: 1;*/
+	/*height: auto;*/
+	/*width: 100%;*/
+	position: absolute;
+	float: left;
+	/*overflow-x: hidden;
+	overflow-y: hidden;*/
+	margin-top: 4.5rem;
+	height: 30rem;
+	width: 50rem;
+	/*background-image: url(/resources/imgs/ce_surgicalMask/Picture1.jpg);*/
+	background-image: linear-gradient(to right, rgba(255,255,255,0.0), rgba(255, 255, 255, 1) 80%),
+	url(/resources/imgs/ce_surgicalMask/Picture1.jpg);
+	background-repeat: no-repeat;
+	/*overflow: hidden;*/
+	/*background-image: linear-gradient(to right, rgba(220,47,75,0.5) 0%, rgba(23, 220, 37, 0.5) 100%);*/
+}
+
+
+.firstSectionSurgicalMasksItem2{
+	/*order: 2;*/
+	position: relative;
+	float: right;
+	font-family: 'IBM Plex Sans', sans-serif;
+  	font-weight: 600;
+  	color: black;
+  	font-size: 2rem;
+  	max-width: 50rem;
+	margin: 10rem 0rem 0rem 0rem;
+}
+
+.surgicalMaskCocoon{
+	font-family: 'IBM Plex Sans', sans-serif;
+  	font-weight: 600;
+  	color: #00182d;
+  	font-size: 4.375rem;
+  	margin: 2rem 2rem 0rem 0rem;
+}
+
+.surgicalMaskUnderline{
+	width: 18rem;
+	margin-top: 0.3125rem;
+	margin-left: 0px;
+	border: none;
+	border-top: 0.45rem solid #ffcc66;
+}
+
+.surgicalMaskSurgicalMask{
+	font-family: 'IBM Plex Sans', sans-serif;
+  	font-weight: 400;
+  	color: black;
+  	font-size: 5rem;
+  	margin: 1rem 2rem 0rem 0rem;
+}
+
+.secondSectionSurgicalMasks{
+	background-color: white;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	/*justify-content: center;*/
+	/*align-content: center;*/
+	align-items: center; /*column items centered horizontally*/
+}
+
+.whereQualityMeetsSection{
+	font-family: 'IBM Plex Sans', sans-serif;
+  	font-weight: 400;
+  	color: #00182d;
+  	font-size: 2rem;
+  	margin-top: 2rem;
+  	order: 1;
+}
+
+.boldText{
+	font-weight: 600;
+}
+
+.secondSectionSMItem2{
+	order: 2;
+	margin-top: 2rem;
+}
+
+.introducingANew{
+	font-family: 'IBM Plex Sans', sans-serif;
+  	font-weight: 400;
+  	color: black;
+  	font-size: 1.5rem;
+  	max-width: 65rem;
+}
+
+.thirdSectionSM{
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	/*align-items: center;*/
+	justify-content: center;
+	margin-top: 3rem;
+}
+
+.thirdSectionSMItem1{
+	min-width: 27rem;
+	max-width: 37rem;
+	padding-top: 2rem;
+	/*height: 20rem;*/
+	flex:1;
+	padding-left: 1.5rem;
+	padding-right: 1.5rem;
+	padding-bottom: 3rem;
+	background-color: #ededed;
+}
+
+.pSurgicalandProcedural{
+	font-family: 'IBM Plex Sans', sans-serif;
+  	font-weight: 600;
+  	color: #00182d;
+  	font-size: 2.1rem;
+  	width: 100%;
+  	margin-left: 2.5rem;
+  	text-align: left;
+}
+
+.pCocoonMasksAre{
+	font-family: 'IBM Plex Sans', sans-serif;
+  	font-weight: 400;
+  	color: black;
+  	font-size: 1.5rem;
+  	width: 100%;
+  	text-align: left;
+  	margin-top: 2rem;
+  	margin-left: 1.5rem;
+  	/*margin-bottom: 3rem;*/
+}
+
+.thirdSectionSMItem2{
+	margin-top: 0rem;
+	/*height: 20rem;*/
+	min-width: 30rem;
+	max-width: 40rem;
+	background-color: white;
+	flex: 1;
+	/*background-image: url(/resources/imgs/ce_surgicalMask/Picture2.jpg);*/
+	/*background-image: linear-gradient(to right, rgba(255,255,255,0.0), rgba(255, 255, 255, 1) 80%),
+	url(/resources/imgs/ce_surgicalMask/Picture1.jpg);*/
+	/*background-repeat: no-repeat;
+	background-size: auto;*/
+}
+
+.orderNow{
+	/*margin-bottom: 250px;*/
+	padding-top: 2.5rem;
+	margin-top: 2rem;
+	margin-left: 1.0rem;
+	/*float: left;*/
+	/*min-width: 50rem;*/
+
+}
+
+.orderNow a{
+	/*z-index: 2;*/
+  	/*position: relative;*/
+	color: white;
+	/*margin-left: 15rem;*/
+	/*margin-bottom: 12.5rem;*/
+	/*margin-right: 40rem;*/
+	border-radius: 1.5625rem;
+	font-family: 'IBM Plex Sans', sans-serif;
+  	font-weight: 600;
+  	font-size: 1.25rem;
+  	padding: 0.3125rem 1.25rem 0.3125rem 1.25rem;
+  	background-color: #00182d;
+  	text-decoration: none;
+  	border: 0.1875rem solid #00182d;  
+  	white-space: nowrap;
+}
+
+.orderNow a:hover{
+	background-color: #ffcc66;
+	color: black;
+	border: 0.1875rem solid #ffcc66;
+	transition: 0.5s;
+}
+
+.imgSurgicalMask{
+	object-fit: cover;
+	margin-left: 0rem;
+	width: 100%;
+}
+
+.fourthSectionSM{
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	/*align-items: center;*/
+	justify-content: center;
+}
+
+.fourthSectionSMItem1{
+	min-width: 30rem;
+	max-width: 40rem;
+	margin-top: 0rem;
+	background-color: black;
+	height: 25rem;
+	background-image: url(/resources/imgs/ce_surgicalMask/Picture3.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+	flex: 1;
+}
+
+.fourthSectionSMItem2{
+	/*height: 100%;*/
+	/*height: 25rem;*/
+	min-width: 27rem;
+	max-width: 37rem;
+	padding-left: 1.5rem;
+	padding-right: 1.5rem;
+	padding-bottom: 1.5rem;
+	background-color: #fabc2d;
+	flex: 1;
+}
+
+.pFourthSectionSM{
+	font-family: 'IBM Plex Sans', sans-serif;
+  	font-weight: 400;
+  	color: black;
+  	font-size: 1.2rem;
+  	width: 100%;
+  	text-align: left;
+  	padding-top: 2rem;
+}
+
+.pFourthSectionSMBlack{
+	font-family: 'IBM Plex Sans', sans-serif;
+  	font-weight: 600;
+  	color: black;
+  	font-size: 1.7rem;
+  	width: 100%;
+  	text-align: left;
+  	padding-top: 2rem;
+  	margin-left: 2.5rem;
+}
+
+.pFourthSectionSMWhite{
+	font-family: 'IBM Plex Sans', sans-serif;
+  	font-weight: 600;
+  	color: white;
+  	font-size: 1.4rem;
+  	width: 100%;
+  	text-align: left;
+  	padding-top: 0.5rem;
+  	margin-left: 2.5rem;
+}
+
+.imgSurgeryPic{
+	object-fit: cover;
+	width: 100%;
+	/*padding-top: 1.5rem;*/
+}

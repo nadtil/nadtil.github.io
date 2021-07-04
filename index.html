@@ -2,7 +2,7 @@
 <html>
 <head>
 	<!-- Global site tag (gtag.js) - Google Analytics -->
-	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-151669756-1"></script>
+	<!--<script async src="https://www.googletagmanager.com/gtag/js?id=UA-151669756-1"></script>
 	<script>
 	  window.dataLayer = window.dataLayer || [];
 	  function gtag(){dataLayer.push(arguments);}
@@ -10,39 +10,38 @@
 
 	  gtag('config', 'UA-151669756-1');
 	</script>
-
+	-->
 	<title>Don Tilakumara</title>
 	<link rel="stylesheet" type="text/css" href="style.css"/>
+	<!-- <link rel="stylesheet" type="text/css" href="styleMasks.css"/> -->
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Abel&family=IBM+Plex+Sans:wght@200;300;400;600&display=swap" rel="stylesheet">
 	<script src="scripts/jquery-3.4.1.js"></script>
 </head>
 
-<body>
+<body onresize="checkScreen()">
 	<div id="commonsection">
         
-    </div>
-<!-- 	<div style="margin-left: 25%; padding-left: 0px">
-		<p id="xyz" class="abc">Hello</p>
-		<p class="abc">How are you</p>
-	</div> -->
-	<div>
-		<h2 class="main-body-header card">Intro</h2>
-	</div>
-
-	<div class="main-body">
-		
-		<p class="main-body-paragraph">I am a qualified electronic engineer with experience in PCB design, control systems design, high-speed electronics and embedded programming including object-oriented programming, looking to gain more experience in relevant spaces. Highly motivated and experienced in working on time critical tasks to deliver the best outcome. Eager to learn new skills, combine them with existing knowledge and apply them to solve real world problems</p>
-
-		<p class="main-body-paragraph"> 
-			This website will give you an overview of the projects that I have been part of. Only a selected information is published on this website as I do not hold the authority to publish all the information.
-		</p>
-
-		<p class="main-body-paragraph"></p>
-
-
 	</div>
 	
+	<!-- Below script is used to switch to mobile or full screen navigation system depending on the screen width value -->
     <script>
-        $( "#commonsection" ).load( "layouts/template.html" );
+    	var i = 0;
+    	function checkScreen(){
+
+    		if(window.innerWidth > 1100){
+    			if(i != 1){
+    				$( "#commonsection" ).load( "layouts/template.html" );
+    				i = 1;
+    			}
+    		}else{
+    			if(i != 2){
+    				$( "#commonsection" ).load( "layouts/mobiletemplate.html" );
+    				i = 2;
+    			}
+    		}
+    	}
+    	checkScreen();
     </script>
 	<!-- <script>
 		var myElement = document.getElementById('xyz');
@@ -58,5 +57,74 @@
 
 		});
 	</script> -->
+
+    <div class="bgImg">
+      <!-- <img src="resources\imgs\ce_main\cocoon bg image.jpg" alt="CE"/> -->
+    </div>
+    <div class="firstSection">
+    	<div class="mainPara">
+	  		<p>Providing the best <span class="yellowColor">care</span> possible <br/> 
+	  		<span class="yellowColor">for patients</span></p>
+	  		<hr class="underlineStyle">
+  		</div>
+	  	<div class="textAboveFindOutMore">
+	  		<p>Care Essentials continues to be a contributor to the engaging development of innovative, high quality products for use in medical and related industries.</p>
+	  	</div>
+	  	<div class="findoutMore">
+	  		<a href="#Privacy" class="adaptingFindOutMore">Find out more</a>
+	  	</div>
+    </div>
+
+  	<div class="secondSection">
+  		<div class="secondSectionItem1">
+  			<p class="cocoonFont">COCOON</p>
+			<p class="tempManageFont"><span class="yellowColor">TEMPERATURE MANAGEMENT <br/> WARMING SYSTEM</span></p>
+  		</div>
+
+  		<div class="secondSectionItem2">
+  			<img src="resources\imgs\ce_main\Cocoon (1).png" alt="CE" class="imgCocoon"></img>
+			<p class="essentialCare">ESSENTIAL CARE BEFORE, DURING & AFTER SURGERY</p>
+  		</div>
+		
+  	</div>
+  	<div class="thirdSection">
+  		
+  	</div>
+  	<div class="fourthSection">
+  		<p class="recognisedWorld">Recognised World Wide</p>
+  		<img src="resources\imgs\ce_main\mapss.jpg" alt="CE" class="imgMap">
+  	</div>
+
+  	<div class="footerSection">
+  		<div class="footerSectionItem1">
+  			<div class="divHorizontal verticalAlignMiddle">
+  				<img src="resources\imgs\ce_main\CE Logo Round.svg" alt="CE" class="imgCEBottom"/>
+  				<div class="footerGrid1">
+  					<img src="resources\imgs\ce_main\CallButton.svg" alt="CE" class="footerImage"/>
+  					<p class="txtColourWhite fontIBMPLEX600 fontSizeFooter paddingFooterText"> Call &nbsp<span class="yellowColor">
+  					+61 3 5277 1455</span></p>
+  					<img src="resources\imgs\ce_main\EmailButton.svg" alt="CE" class="footerImage"/>
+  					<p class="txtColourWhite fontIBMPLEX600 fontSizeFooter paddingFooterText"> Email &nbsp<span class="yellowColor">
+  					sales@careessentials.com.au</span></p>
+  				</div>
+  			</div>
+  		</div>
+  		
+  		<div class="footerGrid2">
+  			<p class="yellowColor fontIBMPLEX600 fontSizeFooter">Head Office</p>
+  			<p class="txtColourWhite fontIBMPLEXSans400">103 Mornington Street</p>
+  			<p class="txtColourWhite fontIBMPLEXSans400">North Geelong</p>
+  			<p class="txtColourWhite fontIBMPLEXSans400">VIC Australia 3215</p>
+  		</div>
+
+  		<div class="footerGrid2">
+  			<p class="yellowColor fontIBMPLEX600 fontSizeFooter">Support</p>
+  			<a class="txtColourWhite fontIBMPLEXSans400 textUnderline" href="">Privacy Policy</a>
+  			<a class="txtColourWhite fontIBMPLEXSans400 textUnderline" href="">Terms & Conditions</a>
+  			<a class="txtColourWhite fontIBMPLEXSans400 textUnderline" href="">Catalogue & Documents</a>
+  		</div>
+  	</div>
+
+	  
 </body>
 </html>
