@@ -28,7 +28,8 @@
 	height: 30rem;
 	width: 50rem;
 	/*background-image: url(/resources/imgs/ce_surgicalMask/Picture1.jpg);*/
-	background-image: url(/resources/imgs/ce_N95Mask/MainPic1.jpg);
+	background-image: linear-gradient(to right, rgba(255,255,255,0.0), rgba(255, 255, 255, 1) 80%),
+	url(/resources/imgs/ce_N95Mask/Image1.jpg);
 	background-repeat: no-repeat;
 	/*z-index: 10;*/
 	/*overflow: hidden;*/
@@ -271,15 +272,131 @@
   	margin-left: 2.5rem;
 }
 
-.n95TitleSection{
-	/*display: flex;*/
-	/*flex-direction: row;
+.fifthSectionN95{
+	display: flex;
+	flex-direction: row;
 	flex-wrap: wrap;
-	justify-content: center;*/
-	/*align-content: center;*/
-	/*align-items: center;*/ /*column items centered horizontally*/
-	/*min-height: 45rem;*/
-	/*margin-top: 4.5rem;*/
+	/*align-items: center;*/
+	justify-content: center;
+}
+
+.fifthSectionN95Item1{
+	min-width: 27rem;
+	max-width: 37rem;
+	padding-left: 1.5rem;
+	padding-right: 1.5rem;
+	padding-bottom: 1.5rem;
+	background-color: #00182d;
+	flex: 1;
+}
+
+.fifthSectionN95Item2{
+	/*height: 100%;*/
+	/*height: 25rem;*/
+	min-width: 27rem;
+	max-width: 37rem;
+	padding-left: 1.5rem;
+	padding-right: 1.5rem;
+	padding-bottom: 1.5rem;
+	background-color: #ededed;
+	flex: 1;
+}
+
+.pFifthSectionSM{
+	font-family: 'IBM Plex Sans', sans-serif;
+  	font-weight: 400;
+  	color: black;
+  	font-size: 1.2rem;
+  	width: 100%;
+  	text-align: left;
+  	padding-top: 2rem;
+}
+
+.pFifthSectionN95Black{
+	font-family: 'IBM Plex Sans', sans-serif;
+  	font-weight: 600;
+  	color: #ffcc66;
+  	font-size: 1.5rem;
+  	width: 100%;
+  	text-align: left;
+  	padding-top: 2rem;
+  	margin-left: 2.5rem;
+}
+
+.pFifthSectionN95White{
+	font-family: 'IBM Plex Sans', sans-serif;
+  	font-weight: 600;
+  	color: white;
+  	font-size: 1.2rem;
+  	width: 100%;
+  	text-align: left;
+  	padding-top: 0.5rem;
+  	margin-left: 2.5rem;
+}
+
+.sixthSectionN95{
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	/*align-items: center;*/
+	justify-content: center;
+}
+
+.sixthSectionN95Item1{
+	min-width: 27rem;
+	max-width: 37rem;
+	padding-left: 1.5rem;
+	padding-right: 1.5rem;
+	padding-bottom: 1.5rem;
+	background-color: #ededed;
+	flex: 1;
+}
+
+.sixthSectionN95Item2{
+	/*height: 100%;*/
+	/*height: 25rem;*/
+	min-width: 27rem;
+	max-width: 37rem;
+	padding-left: 1.5rem;
+	padding-right: 1.5rem;
+	padding-bottom: 1.5rem;
+	background-color: #fabc2d;
+	flex: 1;
+}
+
+.pSixthSectionSM{
+	font-family: 'IBM Plex Sans', sans-serif;
+  	font-weight: 400;
+  	color: black;
+  	font-size: 1.2rem;
+  	width: 100%;
+  	text-align: left;
+  	padding-top: 2rem;
+}
+
+.pSixthSectionN95Black{
+	font-family: 'IBM Plex Sans', sans-serif;
+  	font-weight: 600;
+  	color: black;
+  	font-size: 1.5rem;
+  	width: 100%;
+  	text-align: left;
+  	padding-top: 2rem;
+  	margin-left: 2.5rem;
+}
+
+.pSixthSectionN95White{
+	font-family: 'IBM Plex Sans', sans-serif;
+  	font-weight: 600;
+  	color: white;
+  	font-size: 1.2rem;
+  	width: 100%;
+  	text-align: left;
+  	padding-top: 0.5rem;
+  	margin-left: 2.5rem;
+}
+
+.n95TitleSection{
 	position: relative;
 	overflow: hidden;
 	height: 35rem;
