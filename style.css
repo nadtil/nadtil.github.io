@@ -29,6 +29,14 @@ p{
 
 }
 
+.yellowBackground{
+	background-color: #ffc057;
+}
+
+.blueBackground{
+	background-color: #00182d;
+}
+
 /*@media screen and (max-width: 52.1875rem) {
   .findoutMore {
     min-width: 0px;
@@ -149,7 +157,7 @@ p{
   width: 100%;
   background-color: white;
   /*margin-bottom: 0px;*/
-  min-width: 90rem;
+  min-width: 85rem;
   /*margin: auto;*/
   display: flex;
   flex-direction: row;
@@ -180,8 +188,8 @@ p{
 
 /* Change the color of links on hover */
 .topnav > a:hover {
-  background-color: #ffcc66;
-  color: black;
+  /*background-color: #ffcc66;*/
+  color: #ffcc66;
   transition: 0.3s 
 }
 
@@ -284,6 +292,26 @@ p{
 	text-decoration: none;
 	border: 0.1875rem solid white;  
 	white-space: nowrap;
+}
+
+.roundIcon{
+	z-index: 2;
+  position: relative;
+	color: white;
+	/*margin-left: 15rem;*/
+	/*margin-bottom: 12.5rem;*/
+	/*margin-right: 40rem;*/
+	border-radius: 6rem;
+	width: 2.5rem;
+	height: 4rem;
+	font-family: 'IBM Plex Sans', sans-serif;
+	font-weight: 600;
+	font-size: 1.25rem;
+	padding: 0.3125rem 1.25rem 0.3125rem 1.25rem;
+	text-decoration: none;
+	border: 0.1875rem solid white;  
+	white-space: nowrap;
+	float: right;
 }
 
 .textAboveFindOutMore{
@@ -587,7 +615,10 @@ p{
 
 
 /* Change color of dropdown links on hover */
-.dropdown-content button:hover {background-color: #ffcc66;}
+.dropdown-content button:hover {
+	background-color: #ffcc66;
+	/*color: #ffcc66;*/
+}
 
 /*.dropdown_item-1:hover {background-color: #000000;}
 .dropdown_item-2:hover {background-color: #ddd;}
@@ -602,8 +633,9 @@ p{
 
 /* Change the background color of the dropdown button when the dropdown content is shown */
 .dropdown:hover .dropbtn {
-	background-color: #ffcc66;
-	color: #000;
+	/*background-color: #ffcc66;*/
+	/*color: #000;*/
+	color: #ffcc66;
 	transition: 0.3s
 }
 
