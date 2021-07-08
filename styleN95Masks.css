@@ -14,6 +14,24 @@
 	background-color: #002847;
 }
 
+.marginLeftRightCards{
+	margin-left: 2rem;
+	margin-right: 2rem;
+}
+
+.cardAnimation{
+	transition: transform 0.3s;
+}
+
+.cardAnimation:hover{
+	/*animation: popOut 0.5s ease-in-out forwards;
+	animation-play-state: running;*/
+	/*transform: scale(1.3);*/
+	/*background-color: black;*/
+	transform: scale(1.02);
+	transition-timing-function: ease-in-out;
+}
+
 /*.surgicalMasksImageSection{ 
 	max-width: 100%;
 	position: absolute;
@@ -144,8 +162,7 @@
   	font-weight: 600;
   	color: #00182d;
   	font-size: 2.1rem;
-  	width: 100%;
-  	margin-left: 2.5rem;
+  	/*width: 100%;*/
   	text-align: left;
 }
 
@@ -154,10 +171,9 @@
   	font-weight: 400;
   	color: black;
   	font-size: 1.2rem;
-  	width: 100%;
+  	/*width: 100%;*/
   	text-align: left;
   	margin-top: 2rem;
-  	margin-left: 1.5rem;
   	/*margin-bottom: 3rem;*/
 }
 
@@ -179,7 +195,6 @@
 	/*margin-bottom: 250px;*/
 	padding-top: 2.5rem;
 	margin-top: 2rem;
-	margin-left: 1.0rem;
 	/*float: left;*/
 	/*min-width: 50rem;*/
 
@@ -292,7 +307,8 @@
 	max-width: 37rem;
 	padding-left: 1.5rem;
 	padding-right: 1.5rem;
-	padding-bottom: 1.5rem;
+	padding-bottom: 3.5rem;
+	padding-top: 1.5rem;
 	flex: 1;
 }
 
@@ -320,24 +336,20 @@
 
 .pFifthSectionN95Black{
 	font-family: 'IBM Plex Sans', sans-serif;
-  	font-weight: 600;
+  	font-weight: 400;
   	color: #ffcc66;
   	font-size: 1.5rem;
-  	width: 100%;
   	text-align: left;
   	padding-top: 2rem;
-  	margin-left: 2.5rem;
 }
 
 .pFifthSectionN95White{
 	font-family: 'IBM Plex Sans', sans-serif;
-  	font-weight: 600;
+  	font-weight: 400;
   	color: white;
   	font-size: 1.2rem;
-  	width: 100%;
   	text-align: left;
   	padding-top: 0.5rem;
-  	margin-left: 2.5rem;
 }
 
 .sixthSectionN95{
@@ -359,46 +371,31 @@
 }
 
 .sixthSectionN95Item2{
-	/*height: 100%;*/
-	/*height: 25rem;*/
 	min-width: 27rem;
 	max-width: 37rem;
 	padding-left: 1.5rem;
 	padding-right: 1.5rem;
-	padding-bottom: 1.5rem;
+	padding-bottom: 3.5rem;
+	padding-top: 1.5rem;
 	flex: 1;
-}
-
-.pSixthSectionSM{
-	font-family: 'IBM Plex Sans', sans-serif;
-  	font-weight: 400;
-  	color: black;
-  	font-size: 1.2rem;
-  	width: 100%;
-  	text-align: left;
-  	padding-top: 2rem;
 }
 
 .pSixthSectionN95Black{
 	font-family: 'IBM Plex Sans', sans-serif;
-  	font-weight: 600;
+  	font-weight: 400;
   	color: black;
   	font-size: 1.5rem;
-  	width: 100%;
   	text-align: left;
   	padding-top: 2rem;
-  	margin-left: 2.5rem;
 }
 
 .pSixthSectionN95White{
 	font-family: 'IBM Plex Sans', sans-serif;
-  	font-weight: 600;
+  	font-weight: 400;
   	color: white;
   	font-size: 1.2rem;
-  	width: 100%;
   	text-align: left;
   	padding-top: 0.5rem;
-  	margin-left: 2.5rem;
 }
 
 .n95TitleSection{
