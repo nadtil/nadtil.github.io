@@ -19,8 +19,17 @@
 	margin-right: 2rem;
 }
 
-.cardAnimation{
+/*.cardAnimation{
 	transition: transform 0.3s;
+}
+
+.cardAnimation:hover{
+	transform: scale(1.02);
+	transition-timing-function: ease-in-out;
+}*/
+
+.cardAnimation{
+	transition: opacity 1s;
 }
 
 .cardAnimation:hover{
@@ -28,6 +37,8 @@
 	animation-play-state: running;*/
 	/*transform: scale(1.3);*/
 	/*background-color: black;*/
+	opacity: 0;
+	transition: 0.9s;
 	transform: scale(1.02);
 	transition-timing-function: ease-in-out;
 }
@@ -183,6 +194,7 @@
 	min-width: 30rem;
 	max-width: 40rem;
 	background-color: white;
+	position: relative;
 	flex: 1;
 	/*background-image: url(/resources/imgs/ce_surgicalMask/Picture2.jpg);*/
 	/*background-image: linear-gradient(to right, rgba(255,255,255,0.0), rgba(255, 255, 255, 1) 80%),
@@ -229,6 +241,21 @@
 	object-fit: cover;
 	margin-left: 3.5rem;
 	width: 80%;
+	position: absolute;
+	z-index: 2;
+}
+
+.imgSurgicalMask2{
+	position: absolute;
+	object-fit: cover;
+	width: 80%;
+	z-index: 1;
+	margin-left: 3.5rem;
+}
+
+.imagesOnTop{
+	position: relative;
+	object-fit: cover;
 }
 
 .fourthSectionSM{
