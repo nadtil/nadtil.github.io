@@ -37,7 +37,7 @@
 	width: 50rem;
 	/*background-image: url(/resources/imgs/ce_surgicalMask/Picture1.jpg);*/
 	background-image: linear-gradient(to right, rgba(255,255,255,0.0), rgba(255, 255, 255, 1) 80%),
-	url(/resources/imgs/ce_N95Mask/Image1.jpg);
+	url(/resources/imgs/ce_n95Mask/Image1.jpg);
 	background-repeat: no-repeat;
 	/*z-index: 10;*/
 	/*overflow: hidden;*/
