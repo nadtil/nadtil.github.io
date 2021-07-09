@@ -189,7 +189,7 @@ p{
 /* Change the color of links on hover */
 .topnav > a:hover {
   /*background-color: #ffcc66;*/
-  color: #ffcc66;
+  color: #fc8403;
   transition: 0.3s 
 }
 
@@ -301,13 +301,14 @@ p{
 	/*margin-left: 15rem;*/
 	/*margin-bottom: 12.5rem;*/
 	/*margin-right: 40rem;*/
-	border-radius: 6rem;
-	width: 2.5rem;
-	height: 4rem;
+	border-radius: 5rem;
+	width: 1.8rem;
+	height: 2rem;
 	font-family: 'IBM Plex Sans', sans-serif;
 	font-weight: 600;
 	font-size: 1.25rem;
-	padding: 0.3125rem 1.25rem 0.3125rem 1.25rem;
+	padding: 1rem 1.25rem 1rem 1.25rem;
+	margin-top: 0.25rem;
 	text-decoration: none;
 	border: 0.1875rem solid white;  
 	white-space: nowrap;
@@ -635,7 +636,7 @@ p{
 .dropdown:hover .dropbtn {
 	/*background-color: #ffcc66;*/
 	/*color: #000;*/
-	color: #ffcc66;
+	color: #fc8403;
 	transition: 0.3s
 }
 
